@@ -2,11 +2,11 @@ import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm'
 import { ObjectType, Field, Int } from 'type-graphql'
 import { EntityBase } from './entityBase'
 import { User } from './userEntity'
-import { WorkToGallary } from './workToGallaryEntity'
+import { WorkToGallery } from './workToGalleryEntity'
 
 @Entity('galleries')
 @ObjectType()
-export class Gallary extends EntityBase {
+export class Gallery extends EntityBase {
   @Field(() => Int, { nullable: false })
   @Column()
   user_id: number
@@ -16,20 +16,24 @@ export class Gallary extends EntityBase {
   name: string
 
   @Field(() => Int, { nullable: false })
-  @Column()
+  @Column({
+    default: 1
+  })
   theme_id: number
 
   @Field(() => Boolean, { nullable: false })
-  @Column()
+  @Column({
+    default: true
+  })
   is_active: boolean
 
   //-----------------
 
   @Field(() => User)
-  // eager:true ＝　Gallaryを取得する時、Userも一緒に取得する
+  // eager:true ＝　galleryを取得する時、Userも一緒に取得する
   @ManyToOne(() => User, (user) => user.id, { nullable: true, eager: true })
   @JoinColumn({ name: 'user_id' }) // 外部キーになるGallariesテーブルのカラム
   user: User | null
 
-  joinWorks: WorkToGallary[]
+  joinWorks: WorkToGallery[]
 }

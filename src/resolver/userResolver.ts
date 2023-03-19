@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { Arg, Query, Resolver } from 'type-graphql'
+import { Arg, Int, Mutation, Query, Resolver } from 'type-graphql'
 import { User } from '../entity/userEntity'
 import { UserUsecase } from '../usecases/userUsecase'
 import { Service, Container } from 'typedi'
@@ -17,17 +17,14 @@ export class UserResolver {
     @Arg('login_id', { nullable: true }) login_id?: string,
     @Arg('name', { nullable: true }) name?: string
   ) {
-    const result = await this.userUsecase.getUsers({
-      where: {
-        id: id,
-        login_id: login_id,
-        name: name
-      },
-      relations: {
-        gallaries: true
-      }
-    })
+    const result = await this.userUsecase.getUsers(id, login_id, name)
     return result
+  }
+
+  /**ユーザー登録 */
+  @Mutation(() => Int)
+  async userSignup(@Arg('login_id') login_id: string, @Arg('password') password: string, @Arg('name') name: string) {
+    return await this.userUsecase.userSignup(login_id, password, name)
   }
 
   /**ログイン認証 */
@@ -36,12 +33,7 @@ export class UserResolver {
     @Arg('login_id', { nullable: false }) login_id: string,
     @Arg('password', { nullable: false }) password: string
   ) {
-    const result = await this.userUsecase.getUserOne({
-      where: {
-        login_id: login_id,
-        password: password
-      }
-    })
+    const result = await this.userUsecase.getUserOne(login_id, password)
 
     return result ? true : false
   }

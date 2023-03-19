@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, ManyToMany, OneToMany } from 'ty
 import { ObjectType, Field, Int } from 'type-graphql'
 import { EntityBase } from './entityBase'
 import { User } from './userEntity'
-import { WorkToGallary } from './workToGallaryEntity'
+import { WorkToGallery } from './workToGalleryEntity'
 import { WorkPage } from './workPageEntity'
 import { TagToWork } from './tagToWorkEntity'
 
@@ -18,11 +18,15 @@ export class Work extends EntityBase {
   name: string
 
   @Field(() => String, { nullable: true })
-  @Column()
+  @Column({
+    default: null
+  })
   caption: string
 
   @Field(() => Boolean, { nullable: false })
-  @Column()
+  @Column({
+    default: true
+  })
   is_active: boolean
 
   //-----------------
@@ -31,13 +35,14 @@ export class Work extends EntityBase {
   @JoinColumn({ name: 'user_id' })
   user: User
 
-  @ManyToMany(() => WorkToGallary, (workToGallary) => workToGallary.work_id)
+  @ManyToMany(() => WorkToGallery, (workTogallery) => workTogallery.work_id)
   @JoinColumn({ name: 'id' })
-  joinGallaries: WorkToGallary[]
+  joinGallaries: WorkToGallery[]
 
-  @OneToMany(() => WorkPage, (workPage) => workPage.id)
+  @Field(() => [WorkPage], { nullable: true })
+  @OneToMany(() => WorkPage, (workPage) => workPage.work)
   @JoinColumn({ name: 'id' })
-  workPages: WorkPage[]
+  workPages: WorkPage[] | null
 
   @OneToMany(() => TagToWork, (tagToWork) => tagToWork.work_id)
   @JoinColumn({ name: 'id' })

@@ -11,14 +11,14 @@ export class EntityBase {
   id: number
 
   @Field(() => Int, { nullable: true })
-  @CreateDateColumn({ nullable: true })
+  @CreateDateColumn({ nullable: true, type: 'timestamp' })
   created_at?: number
 
   @Field(() => Int, { nullable: true })
-  @UpdateDateColumn({ nullable: true })
+  @UpdateDateColumn({ nullable: true, type: 'timestamp' })
   updated_at?: number
 
   @Field(() => Int, { nullable: true })
-  @DeleteDateColumn({ nullable: true })
+  @DeleteDateColumn({ nullable: true, type: 'timestamp' })
   deleted_at?: number
 }

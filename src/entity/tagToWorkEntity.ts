@@ -2,14 +2,14 @@ import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm'
 import { ObjectType, Field, Int } from 'type-graphql'
 import { EntityBase } from './entityBase'
 import { Tag } from './tagEntity'
-import { Gallary } from './gallaryEntity'
+import { Gallery } from './galleryEntity'
 
 @Entity('tags_to_works')
 @ObjectType()
 export class TagToWork extends EntityBase {
   @Field(() => Int, { nullable: false })
   @Column()
-  gallary_id: number
+  gallery_id: number
 
   @Field(() => Int, { nullable: false })
   @Column()
@@ -21,9 +21,9 @@ export class TagToWork extends EntityBase {
 
   //-----------------
 
-  @ManyToOne(() => Gallary, (gallary) => gallary.id)
-  @JoinColumn({ name: 'gallary_id' })
-  gallary: Gallary
+  @ManyToOne(() => Gallery, (gallery) => gallery.id)
+  @JoinColumn({ name: 'gallery_id' })
+  gallery: Gallery
 
   @ManyToOne(() => Tag, (tag) => tag.id)
   @JoinColumn({ name: 'tag_id' })

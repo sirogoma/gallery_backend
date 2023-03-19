@@ -11,8 +11,10 @@ export class WorkPage extends EntityBase {
   work_id: number
 
   @Field(() => Int, { nullable: false })
-  @Column()
-  sort: string
+  @Column({
+    default: 1
+  })
+  sort: number
 
   @Field(() => String, { nullable: true })
   @Column()

@@ -8,7 +8,7 @@ import { TagToWork } from './tagToWorkEntity'
 export class Tag extends EntityBase {
   @Field(() => Int, { nullable: false })
   @Column()
-  gallary_id: number
+  gallery_id: number
 
   @Field(() => String, { nullable: false })
   @Column()

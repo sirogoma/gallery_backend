@@ -1,11 +1,13 @@
-import { Entity, Column, OneToMany, JoinColumn, JoinTable, RelationId } from 'typeorm'
-import { ObjectType, Field } from 'type-graphql'
+import { Entity, Column, OneToMany, JoinColumn } from 'typeorm'
+import { ObjectType, Field, InputType } from 'type-graphql'
 import { EntityBase } from './entityBase'
-import { Gallary } from './gallaryEntity'
+import { Gallery } from './galleryEntity'
 import { UserSnsId } from './userSnsIdEntity'
+import { type } from 'os'
 
 @Entity('users')
 @ObjectType()
+@InputType()
 export class User extends EntityBase {
   @Field(() => String, { nullable: false })
   @Column()
@@ -20,15 +22,19 @@ export class User extends EntityBase {
   name: string
 
   @Field(() => String, { nullable: true })
-  @Column()
-  profile?: string
+  @Column({
+    type: 'varchar',
+    length: 255,
+    default: null
+  })
+  profile: string | null
 
-  @Field(() => [Gallary] || null)
-  // OneToMany第二引数は、Gallary側から見た取得方法
+  @Field(() => [Gallery], { nullable: true })
+  // OneToMany第二引数は、gallery側から見た取得方法
   // 両方でeager:trueにすると、N+1で無限ループになる
-  @OneToMany(() => Gallary, (gallaries) => gallaries.user, { nullable: true })
+  @OneToMany(() => Gallery, (gallaries) => gallaries.user, { nullable: true })
   @JoinColumn({ name: 'id' }) // gallariesテーブルの何がキーとして入ってくるのか
-  gallaries: Gallary[] | null
+  gallaries: Gallery[] | null
 
   @Field(() => [UserSnsId], { nullable: true })
   snsIds: UserSnsId[] | null
