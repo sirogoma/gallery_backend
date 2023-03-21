@@ -35,7 +35,7 @@ export class GalleryResolver {
   /**
    * ギャラリー追加
    */
-  @Mutation(() => Int)
+  @Mutation(() => Gallery)
   async addGallery(@Arg('userId') userId: number, @Arg('name') galleryName: string) {
     return await this.galleryUsecase.addGallery(userId, galleryName)
   }

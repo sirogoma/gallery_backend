@@ -1,5 +1,5 @@
 import { AppDataSource } from '../data-source'
-import { FindManyOptions, MoreThan, MoreThanOrEqual } from 'typeorm'
+import { FindManyOptions, MoreThanOrEqual } from 'typeorm'
 import { WorkPage } from '../entity/workPageEntity'
 import { Service } from 'typedi'
 
@@ -27,23 +27,25 @@ export class WorkPageUsecase {
    * @return 新規追加した作品ID
    */
   public async addWorkPage(work_id: number, image_url: string, sort: number): Promise<WorkPage> {
-    const workPageRepository = AppDataSource.getRepository(WorkPage)
-    const updateWorkPages = await workPageRepository.find({
-      where: {
-        sort: MoreThanOrEqual(sort)
-      }
-    })
-    if (updateWorkPages.length > 0) {
-      updateWorkPages.map((record) => {
-        record.sort = record.sort + 1
+    return await AppDataSource.transaction(async (): Promise<WorkPage> => {
+      const workPageRepository = AppDataSource.getRepository(WorkPage)
+      const updateWorkPages = await workPageRepository.find({
+        where: {
+          sort: MoreThanOrEqual(sort)
+        }
       })
-      await workPageRepository.save(updateWorkPages)
-    }
+      if (updateWorkPages.length > 0) {
+        updateWorkPages.map((record) => {
+          record.sort = record.sort + 1
+        })
+        await workPageRepository.save(updateWorkPages)
+      }
 
-    const newWorkPage = new WorkPage()
-    newWorkPage.work_id = work_id
-    newWorkPage.sort = sort
-    newWorkPage.image_url = image_url
-    return await workPageRepository.save(newWorkPage)
+      const newWorkPage = new WorkPage()
+      newWorkPage.work_id = work_id
+      newWorkPage.sort = sort
+      newWorkPage.image_url = image_url
+      return await workPageRepository.save(newWorkPage)
+    })
   }
 }

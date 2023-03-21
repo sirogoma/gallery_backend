@@ -26,16 +26,18 @@ export class WorkUsecase {
    * 作品追加
    */
   public async addWork(user_id: number, name: string, gallery_id: number): Promise<Work> {
-    const workRepository = AppDataSource.getRepository(Work)
-    const newWork = new Work()
-    newWork.user_id = user_id
-    newWork.name = name
-    const addWorkResult = await workRepository.save(newWork)
+    return await AppDataSource.transaction(async (): Promise<Work> => {
+      const workRepository = AppDataSource.getRepository(Work)
+      const newWork = new Work()
+      newWork.user_id = user_id
+      newWork.name = name
+      const addWorkResult = await workRepository.save(newWork)
 
-    // ギャラリー掲載マスタの更新
-    const workToGalleryUsecase = Container.get(WorkToGalleryUsecase)
-    await workToGalleryUsecase.addWorkToGalleryChain(addWorkResult.id, gallery_id)
+      // ギャラリー掲載マスタの更新
+      const workToGalleryUsecase = Container.get(WorkToGalleryUsecase)
+      await workToGalleryUsecase.addWorkToGalleryChain(addWorkResult.id, gallery_id)
 
-    return addWorkResult
+      return addWorkResult
+    })
   }
 }

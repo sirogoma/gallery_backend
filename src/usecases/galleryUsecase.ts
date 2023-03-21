@@ -27,12 +27,12 @@ export class GalleryUsecase {
    * gallery追加
    * @return 新規追加したギャラリーID
    */
-  public async addGallery(user_id: number, name: string): Promise<number> {
+  public async addGallery(user_id: number, name: string): Promise<Gallery> {
     const userRepository = AppDataSource.getRepository(Gallery)
     const newGallery = new Gallery()
     newGallery.user_id = user_id
     newGallery.name = name
     const result = await userRepository.save(newGallery)
-    return result.id
+    return result
   }
 }
