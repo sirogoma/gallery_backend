@@ -1,7 +1,6 @@
 import { AppDataSource } from '../data-source'
 import { WorkToGallery } from '../entity/workToGalleryEntity'
 import { Service } from 'typedi'
-import { FindManyOptions } from 'typeorm'
 import { Work } from '../entity/workEntity'
 
 @Service()
